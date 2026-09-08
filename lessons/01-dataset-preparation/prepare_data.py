@@ -12,7 +12,7 @@ train_dataset = tf.keras.utils.image_dataset_from_directory(
     batch_size=32,
 )
 
-print(train_dataset)
+print(train_dataset.class_names)
 
 normalization = tf.keras.layers.Rescaling(1.0 / 255)
 

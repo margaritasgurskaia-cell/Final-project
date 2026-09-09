@@ -25,28 +25,21 @@ model = Sequential([
     Dense(10, activation="softmax"),
 ])
 
-normalization = tf.keras.layers.Rescaling(1.0 / 255)
-
 num_classes = len(train_dataset.class_names)
 
 images, labels = next(iter(train_dataset))
 
-plt.imshow(images[0].numpy().astype("uint8"))
-plt.title(f"Правильна відповідь: {train_dataset.class_names[labels[0]]}")
-plt.axis("off")
-plt.show()
-
-plt.imshow(images[1].numpy().astype("uint8"))
-plt.title(f"Правильна відповідь: {train_dataset.class_names[labels[1]]}")
-plt.axis("off")
-plt.show()
+print(labels)
 
 model = tf.keras.Sequential([
     tf.keras.Input(shape=(150, 150, 3)),
     tf.keras.layers.Rescaling(1.0 / 255),
     tf.keras.layers.Conv2D(32, 3, activation="relu"),
-    tf.keras.layers.MaxPooling2D(),
+    tf.keras.layers.MaxPooling2D(pool_size=2),
+    tf.keras.layers.Conv2D(64, 3, activation="relu"),
+    tf.keras.layers.MaxPooling2D(pool_size=2),
     tf.keras.layers.Flatten(),
+    tf.keras.layers.Dense(64, activation="relu"),
     tf.keras.layers.Dense(num_classes, activation="softmax"),
 ])
 
@@ -61,12 +54,6 @@ history = model.fit(
     epochs=50,
 )
 
-plt.plot(history.history["accuracy"], label="training accuracy")
-plt.xlabel("Epoch")
-plt.ylabel("Accuracy")
-plt.legend()
-plt.show()
-
 image = images[0:1]
 probabilities = model.predict(image, verbose=0)[0]
 predicted_digit = int(np.argmax(probabilities))
@@ -77,18 +64,4 @@ plt.title(f"Прогноз: {predicted_plant}, правильна відпові
 plt.axis("off")
 plt.show()
 
-probabilities = model.predict(images, verbose=0)
-predictions = np.argmax(probabilities, axis=1)
-wrong_indices = np.where(predictions != labels.numpy())[0]
 
-
-print(f"Кількість помилок: {len(wrong_indices)}")
-
-for index in wrong_indices[:9]:
-    plt.figure(figsize=(2, 2))
-    plt.imshow(images[index].numpy().astype("uint8"))
-    plt.title(
-        f"Прогноз: {predictions[index]}, правильна: {images[index]}"
-    )
-    plt.axis("off")
-    plt.show()

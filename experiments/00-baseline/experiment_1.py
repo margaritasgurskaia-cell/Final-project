@@ -25,6 +25,10 @@ validation_dataset=tf.keras.utils.image_dataset_from_directory(
 print(train_dataset.class_names)
 print(validation_dataset.class_names)
 
+def main():
+    with open("classes.json", "w", encoding="utf-8") as f:
+        json.dump(train_dataset.class_names, f, ensure_ascii=False)
+    
 class_count=len(validation_dataset.class_names)
 
 model = Sequential([
@@ -96,3 +100,6 @@ plt.plot(history.history["val_loss"], label="validation loss")
 plt.legend()
 plt.savefig(experiment_dir / "loss-curves.png")
 plt.close()
+
+if __name__ == "__main__":
+    main()

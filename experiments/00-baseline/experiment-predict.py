@@ -3,7 +3,7 @@ import numpy as np
 import tensorflow as tf
 
 MODEL_PATH = "experiments/00-baseline/model.keras"
-CLASSES_PATH = "experiments/00-baseline/classes.json"
+CLASSES_PATH = "classes.json"
 IMAGE_PATH = "experiments/00-baseline/my_plant.jpg"
 IMAGE_SIZE = (150, 150)
 
@@ -12,6 +12,8 @@ def main():
     model = tf.keras.models.load_model(MODEL_PATH)
     with open(CLASSES_PATH, "r", encoding="utf-8") as f:
         class_names = json.load(f)
+    print(class_names)
+    print(type(class_names))
 
     # 2. Завантажуємо та обробляємо фото
     img = tf.keras.utils.load_img(IMAGE_PATH, target_size=IMAGE_SIZE)

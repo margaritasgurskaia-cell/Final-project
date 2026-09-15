@@ -61,14 +61,21 @@ train_ds = train_ds.cache().prefetch(buffer_size=AUTOTUNE)
 val_ds = val_ds.cache().prefetch(buffer_size=AUTOTUNE)
 test_ds = test_ds.cache().prefetch(buffer_size=AUTOTUNE)
 
+augmentation = tf.keras.Sequential([
+    tf.keras.layers.RandomFlip("horizontal"),
+    tf.keras.layers.RandomRotation(0.1),
+    tf.keras.layers.RandomZoom(0.1),
+    tf.keras.layers.RandomContrast(0.1),
+])
 # ==========================================
 # 3. АРХІТЕКТУРА МОДЕЛІ
 # ==========================================
 model = tf.keras.Sequential([
     tf.keras.Input(shape=(*IMAGE_SIZE, 3)),
+    augmentation,
     tf.keras.layers.Rescaling(1.0 / 255),  # нормалізація пікселів 0..1
     
-    # Блок згорток 1
+    # Блок згорток 
     tf.keras.layers.Conv2D(32, 3, padding="same", activation="relu"),
     tf.keras.layers.MaxPooling2D(),
     
@@ -121,6 +128,7 @@ callbacks = [
 # 5. ФАЗА 1 ТА 2: НАВЧАННЯ ТА ВАЛІДАЦІЯ
 # ==========================================
 print("\nПочаток навчання (Train + Validation)...")
+
 history = model.fit(
     train_ds,
     validation_data=val_ds,

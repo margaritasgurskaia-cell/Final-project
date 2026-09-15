@@ -18,6 +18,7 @@ print(train_dataset.class_names)
 
 model = tf.keras.Sequential([
     tf.keras.Input(shape=(150, 150, 3)),
+    augmentation,
     tf.keras.layers.Rescaling(1.0 / 255),
     tf.keras.layers.Conv2D(32, 3, activation="relu"),
     tf.keras.layers.MaxPooling2D(pool_size=2),
